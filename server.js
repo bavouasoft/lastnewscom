@@ -9,6 +9,7 @@ let axios = require("axios");
 let cheerio = require("cheerio");
 
 // Require all models
+//heroku
 let db = require("./models");
 
 let PORT = 3000;
@@ -39,6 +40,8 @@ app.get("/scrape", function(req, res) {
   axios.get("http://www.echojs.com/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     let $ = cheerio.load(response.data);
+
+    storiesObjects;
 
     // Now, we grab every h2 within an article tag, and do the following:
     $("article h2").each(function(i, element) {
