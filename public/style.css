@@ -1,0 +1,74 @@
+.card-header {
+  padding: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inherit;
+}
+
+.save-article,
+.delete-article,
+.get-notes {
+  float: right;
+  height: 40px;
+  margin: 0px 0px 0px 5px;
+}
+
+.card-text {
+  padding: 20px;
+  height: 75px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+h5 {
+  margin: 0px !important;
+  padding: 0px;
+}
+
+input {
+  width: 100%;
+  height: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 24px;
+}
+
+textarea {
+  width: 100%;
+  height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 16px;
+}
+
+#results {
+  width: 100%;
+  height: 200px;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.delete-note {
+  float: right;
+}
+
+.notes-list,
+.note {
+  margin-bottom: 10px;
+}
+
+.delete-note {
+  position: relative;
+  bottom: 7px;
+}
+
+p {
+  text-align: center;
+  font-size: 24px;
+}
+
+.list-group-item {
+  height: 50px;
+}

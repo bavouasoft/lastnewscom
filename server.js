@@ -1,6 +1,11 @@
 let express = require("express");
 let logger = require("morgan");
 let mongoose = require("mongoose");
+let axios = require("axios");
+let cheerio = require("cheerio");
+
+//  for heroku deployment,  use the deployed database. Otherwise use the local mongoHeadlines database
+//let MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/newscom";
 
 // Our scraping tools
 // Axios is a promised-based http library, similar to jQuery's Ajax method
@@ -12,7 +17,7 @@ let cheerio = require("cheerio");
 //heroku
 let db = require("./models");
 
-let PORT = 3000;
+let PORT = process.env.PORT || 3000;
 
 // Initialize Express
 let app = express();
@@ -28,11 +33,26 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/newscom", {
-  useNewUrlParser: true
-});
+// mongoose.connect("mongodb://localhost/newscom", {
+//   useNewUrlParser: true
+// });
+mongoose.connect(MONGODB_URI);
 
 // Routes
+
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+
+// path for local javascript
+app.get("/app.js", function(req, res) {
+  res.sendFile(path.join(__dirname, "./public/apps.js"));
+});
+
+// path for local css
+app.get("/style.css", function(req, res) {
+  res.sendFile(path.join(__dirname, "./public/style.css"));
+});
 
 // A GET route for scraping the echoJS website
 app.get("/scrape", function(req, res) {
@@ -70,6 +90,8 @@ app.get("/scrape", function(req, res) {
 
     // Send a message to the client
     res.send("Scrape Complete");
+    // send array back to client
+    res.json(result);
   });
 });
 
@@ -130,4 +152,27 @@ app.post("/articles/:id", function(req, res) {
 // Start the server
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
+});
+
+// Route for getting all Articles from the db
+app.get("/articles", function(req, res) {
+  db.Article.find({ saved: false })
+    .then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+// Route for grabbing a specific Article by id, populate it with it's note
+app.get("/articles/:id", function(req, res) {
+  db.Article.findOne({ _id: req.params.id })
+    .populate("notes")
+    .then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
 });
